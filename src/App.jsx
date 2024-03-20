@@ -5,6 +5,7 @@ import { Square } from "./components/Square";
 import { TURNS } from "./constants/constants";
 import { checkWinnerFrom, checkEndGame } from "./logic/board";
 import WinnerModal from "./components/WinnerModal";
+import { saveGame, resetGameStorage } from "./logic/storage";
 
 function App() {
   //NUNCA PONER HOOKS DENTRO DE UN IF
@@ -25,8 +26,8 @@ function App() {
     setBoard(Array(9).fill(null));
     setTurn(TURNS.X);
     setWinner(null);
-    window.localStorage.removeItem("board");
-    window.localStorage.removeItem("turn");
+
+    resetGameStorage();
   };
 
   const updateBoard = (index) => {
@@ -41,9 +42,7 @@ function App() {
     setTurn(newTurn);
 
     //Guardar Partida
-    window.localStorage.setItem("board", JSON.stringify(newBoard));
-    window.localStorage.setItem("turn", turn);
-
+    saveGame({ board: newBoard, turn: newTurn });
     //revisar si hay ganador
     const newWinner = checkWinnerFrom(newBoard);
     if (newWinner) {
